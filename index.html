@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hybrid Cryptography | Caesar & RC4</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <header>
+        <div class="inner">
+            <span class="logo" onclick="showPage('home')">Hybrid Cryptography</span>
+            <nav>
+                <button id="nav-home" class="nav active" onclick="showPage('home')">Home</button>
+                <button id="nav-caesar" class="nav" onclick="showPage('caesar')">Caesar Cipher</button>
+                <button id="nav-rc4" class="nav" onclick="showPage('rc4')">RC4 Cipher</button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="page-home" class="page active">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-text">
+                    <p class="label">Interactive Learning Guide</p>
+                    <h1>Hybrid Cryptography</h1>
+                    <p class="sub">A structured reference covering two different encryption paradigms — the classical Caesar substitution cipher and the modern RC4 stream cipher. Study the theory and test the tools interactively.</p>
+                    <div class="row gap">
+                        <button class="btn" onclick="showPage('caesar')">Caesar Cipher</button>
+                        <button class="btn ghost" onclick="showPage('rc4')">RC4 Cipher</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <p class="label">Overview</p>
+                <h2>Classical vs Modern</h2>
+                <div class="pillars">
+                    <div class="pillar">
+                        <span class="pillar-icon">&#8644;</span>
+                        <strong>Classical Substitution</strong>
+                        <small>Shifting alphabets physically</small>
+                    </div>
+                    <div class="pillar">
+                        <span class="pillar-icon">&#9881;</span>
+                        <strong>Modern Stream</strong>
+                        <small>Bitwise XOR with a pseudorandom keystream</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <p class="label">Comparison</p>
+                <h2>Side-by-Side Overview</h2>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Feature</th><th>Caesar Cipher</th><th>RC4 Cipher</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Type</td><td>Classical Substitution</td><td>Modern Stream Cipher</td></tr>
+                            <tr><td>Key</td><td>Integer Shift (1-25)</td><td>Variable length string/bytes</td></tr>
+                            <tr><td>Unit</td><td>Individual Letters</td><td>Individual Bytes (Bits)</td></tr>
+                            <tr><td>Complexity</td><td>Very Low</td><td>High</td></tr>
+                            <tr><td>Historical Use</td><td>Roman Empire (Julius Caesar)</td><td>WEP, WPA, SSL, TLS</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <main id="page-caesar" class="page">
+        <div class="page-banner">
+            <div class="container">
+                <span class="label">Substitution Cipher</span>
+                <h1>Caesar Cipher</h1>
+                <p>Encrypt messages by shifting the alphabet by a fixed number of positions.</p>
+            </div>
+        </div>
+
+        <div class="container page-body">
+            <section class="section">
+                <h2 class="sec-title">Introduction</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>What is it?</h4>
+                        <p>A substitution cipher where each letter in the plaintext is replaced by a letter some fixed number of positions down the alphabet.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>History</h4>
+                        <p>Named after <strong>Julius Caesar</strong>, who used it with a shift of 3 to protect messages of military significance.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="sec-title">Theory</h2>
+                <div class="theory-block">
+                    <h3>Encryption & Decryption Logic</h3>
+                    <ol>
+                        <li>Choose a shift value (Key) between 1 and 25.</li>
+                        <li>For Encryption: Add the key to the letter's alphabetical index. Wrap around to 'A' if you pass 'Z'.</li>
+                        <li>For Decryption: Subtract the key from the ciphertext letter.</li>
+                    </ol>
+                </div>
+                <div class="theory-block">
+                    <h3>Solved Example (Shift = 3)</h3>
+                    <p><strong>Plaintext:</strong> HELLO</p>
+                    <p>H + 3 = K<br>E + 3 = H<br>L + 3 = O<br>L + 3 = O<br>O + 3 = R</p>
+                    <p><strong>Ciphertext:</strong> KHOOR</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="sec-title">Interactive Tool</h2>
+                <div class="tool-box">
+                    <div class="tool-inputs">
+                        <div class="field">
+                            <label>Plaintext / Ciphertext</label>
+                            <input type="text" id="caesar-text" placeholder="Enter your message" />
+                        </div>
+                        <div class="field">
+                            <label>Shift Key</label>
+                            <input type="number" id="caesar-key" value="3" min="1" max="25" />
+                        </div>
+                    </div>
+                    <div class="row gap">
+                        <button class="btn" onclick="runCaesar(false)">Encrypt</button>
+                        <button class="btn ghost" onclick="runCaesar(true)">Decrypt</button>
+                    </div>
+                    <div class="field" style="margin-top: 20px;">
+                        <label>Result:</label>
+                        <textarea id="caesar-result" rows="2" readonly style="width: 100%; padding: 10px;"></textarea>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <main id="page-rc4" class="page">
+        <div class="page-banner page-banner--rf">
+            <div class="container">
+                <span class="label">Stream Cipher</span>
+                <h1>RC4 Cipher</h1>
+                <p>Generate a pseudorandom keystream and XOR it with your data.</p>
+            </div>
+        </div>
+
+        <div class="container page-body">
+            <section class="section">
+                <h2 class="sec-title">Introduction</h2>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>What is it?</h4>
+                        <p>A software-based stream cipher that generates a continuous stream of pseudorandom bytes, which are XORed with the plaintext.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>History</h4>
+                        <p>Designed by <strong>Ron Rivest in 1987</strong> for RSA Security. It was famously used in early Wi-Fi security (WEP/WPA).</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="sec-title">Theory</h2>
+                <div class="theory-block">
+                    <h3>1. Key-Scheduling Algorithm (KSA)</h3>
+                    <p>RC4 initializes a 256-byte state array (S) from 0 to 255. It then scrambles this array using the secret key to ensure diffusion.</p>
+                </div>
+                <div class="theory-block">
+                    <h3>2. Pseudo-Random Generation Algorithm (PRGA)</h3>
+                    <p>For each byte of plaintext, the algorithm modifies the state array and outputs a single byte of the keystream (K).</p>
+                </div>
+                <div class="theory-block">
+                    <h3>3. XOR Operation</h3>
+                    <p>The plaintext byte is XORed with the keystream byte to produce the ciphertext. Because XOR is reversible, decryption uses the exact same process.</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2 class="sec-title">Interactive Tool</h2>
+                <div class="tool-box">
+                    <div class="tool-inputs">
+                        <div class="field">
+                            <label>Plaintext (Text) / Ciphertext (Hex)</label>
+                            <input type="text" id="rc4-text" placeholder="Enter your message" />
+                        </div>
+                        <div class="field">
+                            <label>Secret Key</label>
+                            <input type="text" id="rc4-key" value="SECRET" />
+                        </div>
+                    </div>
+                    <div class="row gap">
+                        <button class="btn" onclick="runRC4(false)">Encrypt</button>
+                        <button class="btn ghost" onclick="runRC4(true)">Decrypt</button>
+                    </div>
+                    <div class="field" style="margin-top: 20px;">
+                        <label>Result:</label>
+                        <textarea id="rc4-result" rows="2" readonly style="width: 100%; padding: 10px;"></textarea>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
